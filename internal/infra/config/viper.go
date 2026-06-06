@@ -71,6 +71,11 @@ func Init() {
 	configRWMutex.Lock()
 	defer configRWMutex.Unlock()
 
+	// Materialise the embedded default config when none exists yet.
+	if err := ensureConfigFile(); err != nil {
+		log.Fatal("prepare config file failed:", err)
+	}
+
 	if _, err := load(); err != nil {
 		log.Fatal("load static config failed:", err)
 	}

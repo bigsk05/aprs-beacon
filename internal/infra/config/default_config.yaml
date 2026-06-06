@@ -1,0 +1,54 @@
+# Config of system log
+log:
+  file:
+    all: "logs/app.log"
+    err: "logs/err.log"
+  max_size: 5
+  max_backups: 100
+  max_age: 30
+  compress: true
+
+# APRS-IS uplink shared by all stations
+aprs:
+  servers:
+    - host: "rotate.aprs.net"
+      port: 14580
+  # software/version are advertised in the APRS-IS login line, and tocall is the
+  # AX.25 destination placed in every packet. All three are optional and let you
+  # masquerade as another client; leave them empty to use the built-in defaults
+  # (software=aprs-beacon, version=1.0.0, tocall=APBC1).
+  software: "aprs-beacon"
+  version: "1.0.0"
+  # tocall: "APBC1"
+  retry_times: 5
+
+# Fixed-point periodic beaconing
+beacon:
+  enabled: true
+  interval: 60 # resend period in seconds
+  stations:
+    - callsign: "N0CALL-O"
+      latitude: 30.938611
+      longitude: 121.315000
+      symbol: "\\L" # backslash table id, written as "\\" in YAML
+      comment: "Welcome to SLU"
+      info: "Status line text"
+
+# Traccar polling with movement/time triggered reporting
+traccar:
+  enabled: true
+  interval: 10 # polling period in seconds
+  request_timeout: 5 # per-request HTTP timeout in seconds
+  expire_seconds: 60 # positions older than this are stale
+  min_update_seconds: 60 # force a report after this long since last report
+  max_distance_meters: 10 # report when movement exceeds this distance
+  devices:
+    - callsign: "N0CALL-5"
+      url: "https://traccar.example.com"
+      account: "user@example.com"
+      password: "change-me"
+      device: "1"
+      symbol: "/["
+      comment: "About me"
+      info: "I'm waiting on 145.1MHz"
+      skip_old: false
